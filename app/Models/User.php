@@ -14,7 +14,11 @@
 	 
 	 protected $hidden = [
         'password',
-    ];
+	];
+	
+	protected $casts = [
+		'ativo' => 'boolean'
+	];
      
  	public $timestamps = false;
  }

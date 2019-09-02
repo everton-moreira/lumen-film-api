@@ -12,13 +12,25 @@ abstract class BaseController
 
     public function index(Request $request)
     {
+        $query = $this->classe;
+        $regPerPage = ($request->per_page ? $request->per_page : '15');
+        $order = ($request->order ? $request->order : 'asc');
+        $orderBy = ($request->order_by ? $request->order_by : 'asc');
+        $currPage = ($request->page ? $request->page : '1');
+
+        //$query->simplePaginate($regPerPage);
+        //return response()->json($request->per_page, Response::HTTP_NOT_FOUND);
         return $this->classe::paginate($request->per_page);
     }
-    
-    public function searchOne($where)
-    {
-        $recurso = $this->classe::where([$where])->get();
 
+    public function getAll()
+    {
+        return $this->classe::get();
+    }
+
+    public function findData($field, $value)
+    {
+        $recurso = $this->classe::where($field, '=', $value)->get();
         if (is_null($recurso)) {
             return response()->json('', Response::HTTP_NOT_FOUND);
         }
@@ -40,29 +52,27 @@ abstract class BaseController
         
     }
 
-    public function update(int $id, Request $request)
+    public function update($field, $value, Request $request)
     {
-        $recurso = $this->classe::find($id);
+        $recurso = $this->classe::where($field, '=', $value)->first();
         if (is_null($recurso)) {
             return response()->json([
                 'erro' => 'Registro não encontrado'
             ], Response::HTTP_NOT_FOUND);
         }
-        $recurso->fill($request->all());
-        $recurso->save();
-
-        return $recurso;
+        $recurso = $this->classe::where($field, $value)->update($request->all());
+        return response()->json('', Response::HTTP_OK);
     }
 
-    public function destroy(int $id)
+    public function destroy($field, $value)
     {
-        $qtdRemovidos = $this->classe::destroy($id);
-        if ($qtdRemovidos === 0) {
+        $qtdRemovidos = $this->classe::where($field, '=', $value)->get();
+        if (is_null($qtdRemovidos)) {
             return response()->json([
                 'erro' => 'Registro não encontrado'
             ], Response::HTTP_NOT_FOUND);
         }
-
+        $this->classe::where($field, '=', $value)->delete();
         return response()->json('', Response::HTTP_OK);
     }
 }

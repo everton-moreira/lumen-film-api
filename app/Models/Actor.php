@@ -13,7 +13,7 @@
  	];
      
  	protected $casts = [
- 		'last_update' => 'Timestamp'
+ 		'last_update' => 'datetime:Y-m-d H:i:s'
  	];
  
  	public $timestamps = false;

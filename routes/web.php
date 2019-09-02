@@ -19,9 +19,20 @@ $router->group(['prefix' => 'api', 'middleware' => 'autenticado'], function () u
     $router->group(['prefix' => 'actor'], function () use ($router) {
         $router->post('', 'ActorController@create');
         $router->get('', 'ActorController@index');
-        //$router->get('{where}', 'ActorController@searchOne');
-        $router->put('{id}', 'ActorController@update');
-        $router->delete('{id}', 'ActorController@destroy');
+        $router->get('{field}/{value}', 'ActorController@findData');
+        $router->get('filter/{field}/{value}', 'ActorController@filter');
+        $router->put('{field}/{value}', 'ActorController@update');
+        $router->delete('{field}/{value}', 'ActorController@destroy');
+
+        //$router->get('{serieId}/episodios', 'EpisodiosController@buscaPorSerie');
+    });
+
+    $router->group(['prefix' => 'user'], function () use ($router) {
+        $router->post('', 'UserController@create');
+        $router->get('', 'UserController@getAll');
+        $router->get('{field}/{value}', 'UserController@findData');
+        $router->put('{field}/{value}', 'UserController@update');
+        $router->delete('{field}/{value}', 'UserController@destroy');
 
         //$router->get('{serieId}/episodios', 'EpisodiosController@buscaPorSerie');
     });
